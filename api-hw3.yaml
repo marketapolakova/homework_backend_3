@@ -1,0 +1,334 @@
+openapi: "3.0.3"
+info:
+  title: "Shopping list API"
+  description: "Shopping list API for unicorn university homework"
+  version: "1.0"
+
+paths:
+  /api/shoppinglist:
+    summary: "get and create shopping list"
+    get:
+      summary: "get shopping list for signed in user"
+      parameters:
+        - name: "Auth token"
+          description: "auth token of signed user"
+          required: true
+          in: "header"
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "everything ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "Bad request"
+
+    post:
+      summary: "create new shopping list"
+      parameters:
+        - name: "Auth token"
+          description: "auth token of signed user"
+          required: true
+          in: "header"
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shoppinglist"
+      responses:
+        "201":
+          description: "shopping list created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+  "/api/shoppinglist/{listid}":
+    summary: "route for manipulating with shopping list"
+    parameters:
+      - name: "Auth token"
+        in: header
+        description: "auth token of signed user"
+        required: true
+        schema:
+          type: string
+      - name: listid
+        in: query
+        description: "id of shopping list"
+        required: true
+        schema:
+          type: string
+    get:
+      summary: "get shopping list by id"
+      responses:
+        "200":
+          description: "everything ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+    delete:
+      summary: "delete shopping list by id"
+      responses:
+        "200":
+          description: "everything ok, shopping list deleted"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+    put:
+      summary: "update shopping list"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shoppinglist"
+      responses:
+        "200":
+          description: "shopping list updated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+  "/api/shoppinglist/{listid}/item":
+    description: "route for manipulating with item in shopping list"
+    parameters:
+      - name: "Auth token"
+        in: header
+        description: "auth token of signed user"
+        required: true
+        schema:
+          type: string
+      - name: listid
+        in: query
+        description: "id of shopping list"
+        required: true
+        schema:
+          type: string
+    post:
+      description: "add item to shopping list"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postItem"
+      responses:
+        "200":
+          description: "everything ok, item added"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+  "/api/shoppinglist/{listid}/item/{itemid}":
+    description: "route for manipulating with item in shopping list"
+    parameters:
+      - name: "Auth token"
+        in: header
+        description: "auth token of signed user"
+        required: true
+        schema:
+          type: string
+      - name: listid
+        in: query
+        description: "id of shopping list"
+        required: true
+        schema:
+          type: string
+      - name: itemid
+        in: query
+        description: "id if item"
+        required: true
+        schema:
+          type: string
+    delete:
+      description: "delete item from shopping list"
+      responses:
+        "200":
+          description: "everything ok, item deleted"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+    put:
+      description: "edit item in shopping list"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postItem"
+      responses:
+        "200":
+          description: "everything ok, item updated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+  "/api/shoppinglist/{listid}/item/{itemid}/mark":
+    description: "route for check/uncheck item in shopping list"
+    parameters:
+      - name: "Auth token"
+        in: header
+        description: "auth token of signed user"
+        required: true
+        schema:
+          type: string
+      - name: listid
+        in: query
+        description: "id of shopping list"
+        required: true
+        schema:
+          type: string
+      - name: itemid
+        in: query
+        description: "id if item"
+        required: true
+        schema:
+          type: string
+    get:
+      description: "check/uncheck item"
+      responses:
+        "200":
+          description: "everything ok, item checked or unchecked"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+  "/api/shoppinglist/{listid}/contributor":
+    summary: "route for adding contribor to shopping list"
+    parameters:
+      - name: "Auth token"
+        in: header
+        description: "auth token of signed user"
+        required: true
+        schema:
+          type: string
+      - name: listid
+        in: query
+        description: "id of shopping list"
+        required: true
+        schema:
+          type: string
+    post:
+      description: "add contributor to list"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  type: string
+      responses:
+        "200":
+          description: "everything ok, contributor added"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shoppinglist"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+  "/api/shoppinglist/{listid}/contributor/{contributorid}":
+    summary: "route for deleting contribor from shopping list"
+    parameters:
+      - name: "Auth token"
+        in: header
+        description: "auth token of signed user"
+        required: true
+        schema:
+          type: string
+      - name: listid
+        in: query
+        description: "id of shopping list"
+        required: true
+        schema:
+          type: string
+      - name: contributorid
+        in: query
+        description: "id of contributor"
+        required: true
+        schema:
+          type: string
+    delete:
+      description: "delete contributor"
+      responses:
+        "204":
+          description: "everything ok, contributor deleted"
+        "403":
+          description: "unauthorized"
+        "400":
+          description: "bad request"
+components:
+  schemas:
+    shoppinglist:
+      type: object
+      properties:
+        id:
+          type: "string"
+          description: " id of list"
+        name:
+          type: "string"
+          description: "name of the list"
+        items:
+          $ref: "#/components/schemas/items"
+        owner:
+          type: "string"
+          description: "id of user"
+        contributors:
+          type: array
+          description: "list of ids of users who are contributors for given shopping list"
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "id of item"
+        name:
+          type: string
+          description: "name of the item"
+        checked:
+          type: boolean
+          description: "status of item"
+    postItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "name of the item"
+        checked:
+          type: boolean
+          description: "status of item"
